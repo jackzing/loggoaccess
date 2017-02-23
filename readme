@@ -1,0 +1,20 @@
+#get nginx log
+./nginx2goaccess.sh '$remote_addr - $remote_user [$time_local] "$request" ''$status $body_bytes_sent "$http_referer" ''"$http_user_agent" "$http_x_forwarded_for"'
+
+
+# config server
+server { 
+    listen 80;
+    server_name dev.goaccess.com;
+    access_log 
+    root /home/jack/jjslogs; 
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+# real time config
+goaccess -f access-js-test-www.log -o index.html --real-time-html --ws-url=dev.goaccess.com 
+
